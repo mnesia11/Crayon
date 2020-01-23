@@ -1,79 +1,61 @@
-#include <bits/stdc++.h>
+
+#include<bits/stdc++.h>
 using namespace std;
- 
-const int N = 1009;
- 
-int n,a[N],x;
-bool book[N];
-int _wave[N],k;
-int _size;
- 
-bool prime(int x) {
-    if(x == 2) return true;
-    for(int i=2;i*i<=x;i++) {
-        if(x % i == 0)
-            return false;
-    }
-    return true;
+const int INF=0x3f3f3f3f;
+int pre[200005];
+struct edge
+{
+	int v,w;
+	edge(int a,int b)
+	{
+		v=a,w=b;
+	}
+	bool operator < (const edge& rw )const
+	{
+		return w>rw.w;
+	}
+};
+priority_queue<edge>q;
+vector<edge>u[200010];
+bool vst[100010];
+int n,m,x,len[100010];
+void dijkstra(int x)
+{
+	for(int i=1; i<=n; i++)
+	{
+		len[i]=0x3f3f3f3;
+	}
+	len[x]=0;
+	q.push(edge(x,0));
+	while(!q.empty())
+	{
+		edge tmp=q.top();
+		q.pop();
+		if(vst[tmp.v]==1) continue;
+		vst[tmp.v]=1;
+		for(int i=0; i<u[tmp.v].size(); i++)
+		{
+			edge y=u[tmp.v][i];
+			if(len[y.v]>y.w+tmp.w)
+			{
+				len[y.v]=y.w+tmp.w;
+				q.push(edge(y.v,len[y.v]));
+			}
+		}
+	}
 }
- 
-bool perfect(int x) {
-    int sum = 0;
-    for(int i=2;i<=x;i++) {
-        if(x % i == 0) {
-            sum += x / i;
-        }
-    }
-    if(sum == x) return true;
-    else return false;
-}
- 
-bool flower(int x) {
-    int sum = 0,key = x;
-    while(x) {
-        int pos=x%10;
-        sum += pos*pos*pos;
-        x /= 10;
-    }
-    if(sum == key) return true;
-    else return false;
-}
- 
-bool wave(int x) {
-    int size_ = 0,tag = 0;
-    int key[N] = {0};
-    int last[2] = {0};
-    int t[10] = {0};
-    while(x) {
-        size_++;
-        if(size_ == 1) last[size_] = x % 10;
-        if(size_ == 2) last[0] = x % 10;
-        if (last[1]==last[0]) return false;
-        _wave[size_] = x % 10;
-        if(t[x % 10] == 0) {
-            tag++;
-            t[x % 10] = 1;
-        }
-        if(tag > 2) return false;
-        if(_wave[size_] != last[size_ % 2]) return false;
-        x /= 10;
-    }
-    if(size_ < 3) return false;
-    return true;
-}
- 
 int main()
 {
-    scanf("%d",&n);
-    memset(book,false,sizeof(book));
-    for(int i=1;i<=n;++i)
-    {
-        scanf("%d",&k);
-        if (prime(k)||perfect(k)||flower(k)||wave(k)) book[k]=true;
-    }
-    for(int i=1;i<=1000;i++) {
-        if(book[i] == 1) {
-            printf("%d ",i);
-        }
-    }
+	cin>>n>>m>>x;
+	for(int i=0;i<m;i++)
+	{
+		int uu,vv,ww;
+		cin>>uu>>vv>>ww;
+		u[uu].push_back(edge(vv,ww));
+	}
+	dijkstra(x);
+	for(int i=1;i<=n;i++)
+		if(len[i]==0x3f3f3f3)cout<<2147483647<<" ";
+    else cout<<len[i]<<' ';
+		cout<<endl;
 }

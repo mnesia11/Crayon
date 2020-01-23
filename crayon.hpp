@@ -742,11 +742,17 @@ namespace cygraph{
 		ret.m=n-1;
 		ret.update(n);
 		std::vector<crayon_node1>t;
+		std::vector<int>hash;
+		for(int i=1;i<=n;i++) {
+			hash.push_back(i);
+		}
+		random_shuffle(hash.begin(),hash.end());
 		crayon_node1 updatemp;
-		updatemp.id=1;
+		updatemp.id=hash[0];
 		updatemp.soncnt=0;
 		t.push_back(updatemp);
-		for(int i=2;i<=n;i++) {
+		for(int j=2;j<=n;j++) {
+			int i=hash[j-1];
 			std::swap(t[cyrand(0,t.size()-1)],t[t.size()-1]);
 			t[t.size()-1].soncnt++;
 			if(t[t.size()-1].soncnt==k) t.pop_back();
@@ -758,7 +764,6 @@ namespace cygraph{
 			updatemp.soncnt=0;
 			t.push_back(updatemp);
 		}
-//		for(int i=0;i<n;i++)
 		return ret;
 	}
 	
